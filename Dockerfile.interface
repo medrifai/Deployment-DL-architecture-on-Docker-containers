@@ -1,22 +1,22 @@
-# Dockerfile.interface
+# Dockerfile.inference
 
-# Utiliser une image Python légère
+# Use a lightweight Python image
 FROM python:3.9-slim
 
-# Définir le répertoire de travail
+# Set working directory
 WORKDIR /app
 
-# Copier le fichier d'interface utilisateur (par exemple, interface.py)
+# Copy interface code
 COPY interface.py /app/interface.py
 
 # Copier le fichier requirements.txt
-COPY requirements.txt /app/requirements.txt
+COPY requirements.interface.txt /app/requirements.txt
 
 # Installer les dépendances requises
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Exposer le port utilisé par Gradio (par exemple, 7860 par défaut)
-EXPOSE 7860
+# Expose Streamlit port
+EXPOSE 8501
 
-# Commande pour lancer Gradio ou autre interface utilisateur
-CMD ["python", "interface.py"]
+# Run the Streamlit app
+CMD ["streamlit", "run", "interface.py", "--server.port=8501", "--server.address=0.0.0.0"]
