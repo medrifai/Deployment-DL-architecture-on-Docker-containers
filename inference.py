@@ -1,20 +1,15 @@
-import streamlit as st
-import requests
+from fastapi import FastAPI
+from transformers import pipeline
 
-st.title("Text Summarizer")
+# Create a FastAPI app instance
+app = FastAPI()
 
-# Input text area
-input_text = st.text_area("Enter text to summarize:", height=150)
+# Load pre-trained model
+model_name = "facebook/bart-large-cnn"
+summarizer = pipeline("summarization", model=model_name)
 
-if st.button("Summarize"):
-    if input_text:
-        # Make a request to the FastAPI service running in the inference container
-        response = requests.post(f"http://inference:8000/summarize/", params={"text": input_text})
-        if response.status_code == 200:
-            summary = response.json().get("summary")
-            st.subheader("Summary:")
-            st.write(summary)
-        else:
-            st.write("Error in summarization.")
-    else:
-        st.write("Please enter some text to summarize.")
+# Inference route
+@app.post("/summarize/")
+async def summarize(text: str):
+    summary = summarizer(text, max_length=130, min_length=30, do_sample=False)
+    return {"summary": summary[0]["summary_text"]}

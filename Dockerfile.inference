@@ -13,7 +13,7 @@ COPY inference.py /app/inference.py
 COPY requirements.inference.txt /app/requirements.txt
 
 # Installer les dépendances requises
-RUN pip install --no-cache-dir -r requirements.txt --timeout=1000 --index-url=https://pypi.org/simple
+RUN pip install --no-cache-dir -r requirements.txt --timeout=260 --index-url=https://pypi.org/simple
 
 # Exposer le port utilisé par FastAPI
 EXPOSE 8000
